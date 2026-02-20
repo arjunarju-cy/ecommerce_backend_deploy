@@ -15,6 +15,13 @@ app.use(cookieParser())
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "success",
+        message: "Backend deployed successfully"
+    });
+});
+
 // Route
 app.use("/api/v1", product)
 app.use("/api/v1", user)
