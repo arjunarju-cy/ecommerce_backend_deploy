@@ -4,7 +4,7 @@ import handleAsyncError from "../middleware/handleAsyncError.js";
 import APIFunctionality from "../utils/apiFunctionality.js";
 import { v2 as cloudinary } from "cloudinary";
 
-// http://localhost:8000/api/v1/product/67754dee70963118b3b10721?keyword=shirt
+// DB_URI is provided via `process.env.DB_URI` (see config/config.env)
 
 // 1️⃣Creating Products
 export const createProducts = handleAsyncError(async (req, res, next) => {
@@ -21,7 +21,7 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
     for (let i = 0; i < image.length; i++) {
       try {
         const result = await cloudinary.uploader.upload(image[i], {
-          folder: "products",
+          folder: process.env.CLOUDINARY_FOLDER || "products",
         });
         imageLinks.push({
           public_id: result.public_id,
@@ -37,7 +37,7 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
   if (imageLinks.length === 0) {
     imageLinks.push({
       public_id: "default_product",
-      url: "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg"
+      url: process.env.DEFAULT_PRODUCT_IMAGE || "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
     });
   }
 
@@ -108,7 +108,7 @@ export const updateProduct = handleAsyncError(async (req, res, next) => {
     const imageLinks = [];
     for (let i = 0; i < images.length; i++) {
       const result = await cloudinary.uploader.upload(images[i], {
-        folder: "products",
+        folder: process.env.CLOUDINARY_FOLDER || "products",
       });
       imageLinks.push({
         public_id: result.public_id,

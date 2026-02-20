@@ -11,13 +11,13 @@ export const registerUser = handleAsyncError(async (req, res, next) => {
 
     let avatarData = {
         public_id: "default_avatar",
-        url: "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg"
+        url: process.env.DEFAULT_AVATAR_IMAGE || "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
     };
 
     if (process.env.CLOUDINARY_NAME !== "your-cloud-name") {
         try {
             const myCloud = await cloudinary.uploader.upload(avatar, {
-                folder: 'avatars',
+                folder: process.env.CLOUDINARY_AVATAR_FOLDER || 'avatars',
                 width: 150,
                 crop: 'scale'
             });
@@ -166,7 +166,7 @@ export const updateProfile = handleAsyncError(async (req, res, next) => {
         const imageId = user.avatar.public_id
         await cloudinary.uploader.destroy(imageId)
         const myCloud = await cloudinary.uploader.upload(avatar, {
-            folder: 'avatars',
+            folder: process.env.CLOUDINARY_AVATAR_FOLDER || 'avatars',
             width: 150,
             crop: 'scale'
         })
