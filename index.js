@@ -19,10 +19,16 @@ process.on('uncaughtException', (err) => {
 })
 
 const port = process.env.PORT || 3000;
-export const instance = new Razorpay({
-    key_id: process.env.RAZORPAY_API_KEY,
-    key_secret: process.env.RAZORPAY_API_SECRET,
-});
+let razorpayInstance = null;
+try {
+    razorpayInstance = new Razorpay({
+        key_id: process.env.RAZORPAY_API_KEY || "dummy_key_id",
+        key_secret: process.env.RAZORPAY_API_SECRET || "dummy_key_secret",
+    });
+} catch (error) {
+    console.log("Razorpay initialization warning:", error.message);
+}
+export const instance = razorpayInstance;
 
 const server = app.listen(port, () => {
     console.log(`Server is running on PORT ${port}`);
@@ -30,10 +36,6 @@ const server = app.listen(port, () => {
 })
 
 process.on('unhandledRejection', (err) => {
-    console.log(`Error: ${err.message}`);
-    console.log(`Server is shutting down, due to unhandled promise rejection`);
-    server.close(() => {
-        process.exit(1)
-    })
-
+    console.log(`Unhandled Promise Rejection Error: ${err.message}`);
+    console.log(`Stack trace:`, err.stack);
 })
