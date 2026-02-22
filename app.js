@@ -15,7 +15,7 @@ dotenv.config();
 
 // ✅ ADD THIS CORS MIDDLEWARE (VERY IMPORTANT)
 app.use(cors({
-    origin: "https://ecommerce-frontend-deploy-1qsn.onrender.com",
+    origin: ["https://ecommerce-frontend-deploy-1qsn.onrender.com", "https://ecommerce-frontend-deploy-1-4fb1.onrender.com"],
     credentials: true
 }));
 
